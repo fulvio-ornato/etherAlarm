@@ -7,6 +7,7 @@ int btnProgramma = 2;
 int btnAvanza = 9;  
 int flagEsci=1;
 int buzzer = 12; 
+int myPins[] = {3,4,6,7,8,10};
 
 void setup() {
   pinMode(btnProgramma, INPUT);    // button as input
@@ -15,9 +16,9 @@ void setup() {
   digitalWrite(btnAvanza, HIGH); // turns on pull-up resistor after input
     
   Serial.begin(57600);
-  //set as output the pin 3,4,5,6,7,8
-  for (int i=3; i<=8; i++) {
-      pinMode(i, OUTPUT);
+  //set as output the pin 3,4,6,7,8,10
+  for (int i=0; i<=5; i++) {
+      pinMode(myPins[i], OUTPUT);
   }
 
   timeStart = millis();
@@ -75,12 +76,12 @@ void loop() {
 
   //if the time didn't end turn on the LED bit for bit
   if (timeEnd > millis()) {
-    for (int i=3; i<9; i++) {
-      digitalWrite(i, bitRead(tempo,i-3));
+    for (int i=0; i<=5; i++) {
+      digitalWrite(myPins[i], bitRead(tempo,i));
     }
     if (tempo==0) {
       Serial.println("ultimo minuto");
-      digitalWrite(3, bitRead(secondi,0));
+      digitalWrite(myPins[0], bitRead(secondi,0));
     }
     delay(1000);   
   } else {
@@ -88,12 +89,12 @@ void loop() {
   //after one minute blink decrease  
     scaduto++;
     if (scaduto < 60) {
-      for (int i=3; i<=8; i++) {
-        digitalWrite(i, LOW);   
+      for (int i=0; i<=5; i++) {
+        digitalWrite(myPins[i], LOW);   
       }
-      delay(500*ritardo);              
-      for (int i=3; i<=8; i++) {
-        digitalWrite(i, HIGH); 
+      delay(200*ritardo);              
+      for (int i=0; i<=5; i++) {
+        digitalWrite(myPins[i], HIGH); 
         beep();
       }
       delay(500/ritardo);      
@@ -118,8 +119,8 @@ void settaTimer() {
         //beep();
         delay(1000);
         while(1) {
-         for (int i=3; i<9; i++) {
-           digitalWrite(i, bitRead(tempo,i-3));
+         for (int i=0; i<=5; i++) {
+           digitalWrite(myPins[i], bitRead(tempo,i));
          } 
          if (digitalRead(btnProgramma) == LOW) {
             delay(100);
